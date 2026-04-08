@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudShield AI | Elite DFIR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #020617;
+            --card-bg: #0f172a;
+            --border: #1e293b;
+            --accent: #38bdf8;
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 240px;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item {
+            padding: 12px;
+            border-radius: 8px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--card-bg);
+            color: var(--text-main);
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .status-pill {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            transition: 0.3s ease;
+        }
+
+        .status-secure { background: rgba(34, 197, 94, 0.1); color: var(--success); border-color: var(--success); }
+        .status-attack { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger); }
+
+        /* --- BUTTONS --- */
+        .btn-group { display: flex; gap: 12px; }
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-secondary { background: var(--border); color: white; }
+        button:hover { opacity: 0.8; transform: translateY(-1px); }
+
+        /* --- DASHBOARD GRID --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 16px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            margin: 0 0 15px 0;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .info-val { font-family: 'Courier New', monospace; color: var(--accent); }
+
+        /* --- BADGES --- */
+        .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .low { background: var(--success); color: #000; }
+        .medium { background: var(--warning); color: #000; }
+        .high { background: var(--danger); color: #fff; }
+
+        /* --- TIMELINE --- */
+        .timeline {
+            margin-top: 20px;
+            background: #020617;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px dashed var(--border);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .timeline-entry {
+            padding: 5px 0;
+            border-left: 2px solid var(--accent);
+            padding-left: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* --- TABLE --- */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; color: var(--text-dim); font-size: 0.8rem; padding-bottom: 10px; }
+        td { padding: 12px 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
+
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2><i class="fas fa-shield-halved"></i> CloudShield AI</h2>
+    <div class="nav-item active"><i class="fas fa-chart-line"></i> Dashboard</div>
+    <div class="nav-item"><i class="fas fa-file-waveform"></i> Incidents</div>
+    <div class="nav-item"><i class="fas fa-terminal"></i> Logs</div>
+    <div class="nav-item"><i class="fas fa-gear"></i> Settings</div>
+</div>
+
+<div class="main">
+    <div class="header">
+        <div>
+            <h1 style="margin:0; font-size: 1.5rem;">Incident Command Center</h1>
+            <p style="color: var(--text-dim); margin: 5px 0 0 0;">Real-time Forensics & Autonomous Response</p>
+        </div>
+        <div id="status" class="status-pill status-secure">System Secure</div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-primary" onclick="start()"><i class="fas fa-bolt"></i> Simulate Attack</button>
+        <button class="btn-secondary" onclick="reset()"><i class="fas fa-rotate-left"></i> Resolve & Clear</button>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3><i class="fas fa-circle-info"></i> Basic Info</h3>
+            <div class="info-row"><span>ID:</span> <span id="id" class="info-val">-</span></div>
+            <div class="info-row"><span>Source IP:</span> <span id="ip" class="info-val">-</span></div>
+            <div class="info-row"><span>Attack:</span> <span id="type" class="info-val">-</span></div>
+            <div class="info-row"><span>Severity:</span> <span id="severity">-</span></div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-brain"></i> AI Reasoning</h3>
+            <p id="ai" style="font-style: italic; color: var(--text-dim);">Awaiting data feed...</p>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-clock"></i> Lifecycle</h3>
+            <div class="info-row"><span>Detected:</span> <span id="start" class="info-val">-</span></div>
+            <div class="info-row"><span>Resolved:</span> <span id="end" class="info-val">-</span></div>
+            <div class="info-row"><span>State:</span> <span id="state" class="info-val">-</span></div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="card">
+            <h3><i class="fas fa-list-check"></i> Automated Response Steps</h3>
+            <ul id="steps" style="padding-left: 20px; line-height: 1.8;"></ul>
+        </div>
+        <div class="card">
+            <h3><i class="fas fa-stream"></i> Real-time Activity</h3>
+            <div class="timeline" id="timeline">
+                <p style="color: var(--text-dim)">Awaiting system events...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+        <h3><i class="fas fa-history"></i> Global Incident History</h3>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Type</th><th>Severity</th><th>Timestamp</th></tr>
+            </thead>
+            <tbody id="history"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    async function start() {
+        let res = await fetch("http://127.0.0.1:5000/incident");
+        let data = await res.json();
+        updateUI(data);
+    }
+
+    async function reset() {
+        let res = await fetch("http://127.0.0.1:5000/resolve");
+        let data = await res.json();
+        updateUI(data);
+
+        // Update History Table
+        let table = document.getElementById("history");
+        let row = table.insertRow(0);
+        row.innerHTML = `<td>${data.id}</td><td>${data.type}</td>
+                        <td><span class="badge ${data.severity.toLowerCase()}">${data.severity}</span></td>
+                        <td>${data.end_time}</td>`;
+    }
+
+    function updateUI(data) {
+        if (!data || !data.id) return;
+
+        const statusEl = document.getElementById("status");
+        if (data.status === "Active") {
+            statusEl.innerText = "🚨 Attack Detected";
+            statusEl.className = "status-pill status-attack";
+        } else {
+            statusEl.innerText = "✅ System Secure";
+            statusEl.className = "status-pill status-secure";
+        }
+
+        document.getElementById("id").innerText = data.id;
+        document.getElementById("ip").innerText = data.ip;
+        document.getElementById("type").innerText = data.type;
+        
+        let sevClass = data.severity.toLowerCase();
+        document.getElementById("severity").innerHTML = `<span class="badge ${sevClass}">${data.severity}</span>`;
+
+        document.getElementById("start").innerText = data.start_time;
+        document.getElementById("end").innerText = data.end_time || "N/A";
+        document.getElementById("state").innerText = data.status;
+        document.getElementById("ai").innerText = data.ai;
+
+        let list = document.getElementById("steps");
+        list.innerHTML = "";
+        data.steps.forEach(s => {
+            let li = document.createElement("li");
+            li.innerText = s;
+            list.appendChild(li);
+        });
+
+        let timeline = document.getElementById("timeline");
+        timeline.innerHTML = `<div class="timeline-entry"><strong>[${data.start_time}]</strong> ⚠️ Initial alert triggered.</div>`;
+        
+        data.steps.forEach((s, i) => {
+            setTimeout(() => {
+                let entry = document.createElement("div");
+                entry.className = "timeline-entry";
+                entry.innerHTML = `<strong>[SYSTEM]</strong> ✅ ${s}`;
+                timeline.prepend(entry);
+            }, (i + 1) * 600);
+        });
+    }
+</script>
+</body>
+</html>
